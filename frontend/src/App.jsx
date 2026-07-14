@@ -1,8 +1,13 @@
-
+import { Navbar, Footer } from "./components/index.js"
+import { Outlet } from "react-router-dom"
 
 const App = () => {
   return (
-    <div className="text-3xl font-bold underline">App</div>
+    <>
+      <Navbar />
+      <Outlet />
+      <Footer />
+    </>
   )
 }
 
