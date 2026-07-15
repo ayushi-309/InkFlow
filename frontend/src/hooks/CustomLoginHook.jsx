@@ -7,19 +7,18 @@ const AuthProvider = ({ children }) => {
 
   // Fetching user form Backend
   useEffect(() => {
-    fetch('https://test-api.free.beeceptor.com/get-true',{
+    fetch('https://fakestoreapi.com/products/1',{
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => {
-        console.log(res)
-        if (res.status !== 200) {
-          setIsUserLogin(true);
-        }
+      .then((res) => res.json())
+      .then(json => {
+        if (json.id === 1)
+          setIsUserLogin(true)
         else
-          setIsUserLogin(false);
+          setIsUserLogin(false)
       })
       .catch((err) => {
         console.log(err);
