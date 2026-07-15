@@ -8,6 +8,7 @@ const Footer = () => {
     { name: "Technology", href: "#" },
     { name: "Lifestyle", href: "#" },
     { name: "Business", href: "#" },
+    { name: "Archives", href: "#" },
   ];
 
   const brandLinks = [
@@ -18,7 +19,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full bg-[#f8f9fa] border-t border-slate-200 pt-12 md:pt-16 pb-8 mt-auto">
+    <footer className="w-full bg-white border-t border-slate-200 pt-12 md:pt-16 pb-8 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
