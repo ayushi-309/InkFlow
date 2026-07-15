@@ -10,6 +10,11 @@ import {
   Login,
   Signup,
   AuthControler,
+  Dashboard,
+  Posts,
+  Categories,
+  User,
+  CMS_Controler,
 } from "./pages/index.js";
 
 const router = createBrowserRouter([
@@ -42,6 +47,28 @@ const router = createBrowserRouter([
       {
         path: "/forget-password",
         element: <ForgetPassword />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <CMS_Controler />,
+    children: [
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/posts",
+        element: <Posts />,
+      },
+      {
+        path: "/categories",
+        element: <Categories />,
+      },
+      {
+        path: "/user",
+        element: <User />,
       },
     ],
   },
