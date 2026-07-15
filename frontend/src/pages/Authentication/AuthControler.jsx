@@ -1,10 +1,11 @@
-import { Outlet } from "react-router-dom"
+import { useAuth } from "../../hooks/CustomLoginHook.jsx";
+import { Outlet, Navigate } from "react-router-dom";
 
 const AuthControler = () => {
+  const { isUserLogin } = useAuth();
+
   return (
-    <div>
-      <Outlet />
-    </div>
+    <>{ !isUserLogin ? <Outlet /> : <Navigate to="/dashboard" replace /> }</>
   )
 }
 

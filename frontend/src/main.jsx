@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./styles/index.css";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { AuthProvider } from "./hooks/CustomLoginHook.jsx";
 import {
   Home,
   BlogDetail,
@@ -76,8 +77,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router}>
-      <App />
-    </RouterProvider>
+    <AuthProvider >
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 );

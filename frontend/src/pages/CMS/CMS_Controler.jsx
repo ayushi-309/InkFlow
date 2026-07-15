@@ -1,12 +1,13 @@
-import { useState } from "react";
 import { Outlet, Navigate } from "react-router-dom";
+import { useAuth } from "../../hooks/CustomLoginHook.jsx";
 
 const CMS_Controler = () => {
-  const [isCMSLoggedIn, setIsCMSLoggedIn] = useState(false);
+  const { isUserLogin } = useAuth();
+  console.log(`User Login State is: ${isUserLogin}`)
 
   return (
-    <>{ isCMSLoggedIn ? <Outlet /> : <Navigate to="/login" replace /> }</>
+    <>{ isUserLogin ? <Outlet /> : <Navigate to="/login" replace /> }</>
   );
 };
 
-export default CMS_Controler
+export default CMS_Controler;
