@@ -8,7 +8,6 @@ const Footer = () => {
     { name: "Technology", href: "#" },
     { name: "Lifestyle", href: "#" },
     { name: "Business", href: "#" },
-    { name: "Archives", href: "#" },
   ];
 
   const brandLinks = [
