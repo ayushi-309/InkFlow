@@ -12,6 +12,13 @@ import BlogSidebar from "./blog/BlogSidebar";
 import NewsletterCTA from "./blog/NewsletterCTA";
 import RelatedStories from "./blog/RelatedStories";
 import ShareBar from "./blog/ShareBar";
+import CMSSidebar from "./cms/CMSSidebar.jsx";
+import CMSHeader from "./cms/CMSHeader.jsx";
+import StatCard from "./cms/StatCard.jsx";
+import RecentPostsTable from "./cms/RecentPostsTable.jsx";
+import CMSFooter from "./cms/CMSFooter.jsx";
+
+
 
 export {
   Navbar,
@@ -27,5 +34,10 @@ export {
   BlogSidebar,
   NewsletterCTA,
   RelatedStories,
-  ShareBar
+  ShareBar,
+  CMSSidebar,
+  CMSHeader,
+  StatCard,
+  RecentPostsTable,
+  CMSFooter,
 };

@@ -1,11 +1,3 @@
-/**
- * NewsletterCTA
- *
- * Props:
- *  - variant: "sidebar" (default) | "mobile"
- *    "sidebar" → dark rounded card used in the desktop sidebar
- *    "mobile"  → full-width dark banner used below the article on small screens
- */
 const NewsletterCTA = ({ variant = "sidebar" }) => {
   if (variant === "mobile") {
     return (

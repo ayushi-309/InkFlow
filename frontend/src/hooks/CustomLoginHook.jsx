@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
     })
       .then((res) => res.json())
       .then(json => {
-        if (json.id !== 1)
+        if (json.id === 1)
           setIsUserLogin(true)
         else
           setIsUserLogin(false)
