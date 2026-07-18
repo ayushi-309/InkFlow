@@ -17,6 +17,10 @@ import CMSHeader from "./cms/CMSHeader.jsx";
 import StatCard from "./cms/StatCard.jsx";
 import RecentPostsTable from "./cms/RecentPostsTable.jsx";
 import CMSFooter from "./cms/CMSFooter.jsx";
+import FormattingToolbar from "./cms/Posts/FormattingToolbar.jsx";
+import PostActionBar from "./cms/Posts/PostActionBar.jsx";
+import PostEditor from "./cms/Posts/PostEditor.jsx";
+import PostSidebar from "./cms/Posts/PostSidebar.jsx";
 
 
 
@@ -40,4 +44,8 @@ export {
   StatCard,
   RecentPostsTable,
   CMSFooter,
+  FormattingToolbar,
+  PostActionBar,
+  PostEditor,
+  PostSidebar,
 };

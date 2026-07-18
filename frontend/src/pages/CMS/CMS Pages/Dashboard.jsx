@@ -1,17 +1,12 @@
 import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
   RiArticleLine,
   RiEyeLine,
   RiChat1Line,
 } from "@remixicon/react";
-import {
-  CMSSidebar,
-  CMSHeader,
-  StatCard,
-  RecentPostsTable,
-  CMSFooter
-} from "../../../components/index.js";
 
+import { CMSHeader, StatCard, RecentPostsTable, CMSFooter } from "../../../components/index.js";
 
 /* ── Mock data ── */
 const STATS = [
@@ -77,63 +72,49 @@ const RECENT_POSTS = [
     date: "Oct 18, 2023",
     image: "/images/neuromorphic_computing.png",
   },
-  {
-    id: "5",
-    title: "Beyond Silicon: Neuromorphic Edge Computing",
-    category: "Technology",
-    status: "Scheduled",
-    date: "Oct 18, 2023",
-    image: "/images/neuromorphic_computing.png",
-  },
 ];
 
 /* ─────────────────────────────── Component ─────────────────────────────── */
 const Dashboard = () => {
+  const { setIsSidebarOpen } = useOutletContext();
   const [search, setSearch] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const filteredPosts = RECENT_POSTS.filter((p) =>
     p.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
-      {/* Dark sidebar */}
-      <CMSSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+    <>
+      <div className="flex-shrink-0">
+        <CMSHeader
+          title="Overview"
+          subtitle="Welcome back. Here's what's happening with InkFlow today."
+          searchValue={search}
+          onSearchChange={setSearch}
+          onMenuClick={() => setIsSidebarOpen(true)}
+        />
+      </div>
 
-      {/* Main content — scrolls independently */}
-      <main className="flex-1 flex flex-col overflow-y-auto px-6 lg:px-8 py-8 min-w-0 min-h-0">
-        <div className="flex-shrink-0">
-          <CMSHeader
-            title="Overview"
-            subtitle="Welcome back. Here's what's happening with InkFlow today."
-            searchValue={search}
-            onSearchChange={setSearch}
-            onMenuClick={() => setIsSidebarOpen(true)}
-          />
-        </div>
+      {/* Stats grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mb-8 flex-shrink-0">
+        {STATS.map((s) => (
+          <StatCard key={s.label} {...s} />
+        ))}
+      </div>
 
-        {/* Stats grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mb-8 flex-shrink-0">
-          {STATS.map((s) => (
-            <StatCard key={s.label} {...s} />
-          ))}
-        </div>
+      {/* Recent posts table */}
+      <div className="flex-shrink-0 mb-8">
+        <RecentPostsTable
+          posts={filteredPosts}
+          onEdit={(post) => console.log("Edit", post.id)}
+          onDelete={(post) => console.log("Delete", post.id)}
+        />
+      </div>
 
-        {/* Recent posts table */}
-        <div className="flex-shrink-0 mb-8">
-          <RecentPostsTable
-            posts={filteredPosts}
-            onEdit={(post) => console.log("Edit", post.id)}
-            onDelete={(post) => console.log("Delete", post.id)}
-          />
-        </div>
-
-        <div className="mt-auto flex-shrink-0">
-          <CMSFooter />
-        </div>
-      </main>
-    </div>
+      <div className="mt-auto flex-shrink-0">
+        <CMSFooter />
+      </div>
+    </>
   );
 };
 
