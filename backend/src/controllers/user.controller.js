@@ -7,18 +7,21 @@ import { uploadOnCloudnary } from "../utils/cloudnary.js";
 // Methode to Generate Access Token and Refresh Token.
 const generrateToken = async (id) => {
   try {
-    const user = await User.findById(id)
-    const accessToken = user.generateAccessToken()
-    const refreshToken = user.generateRefreshToken()
+    const user = await User.findById(id);
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
 
-    user.refreshToken = refreshToken
-    await user.save({ validateBeforeSave: false })
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
 
-    return { accessToken, refreshToken }
+    return { accessToken, refreshToken };
   } catch (error) {
-    throw new ApiError(500, "SomeThing Went Wrong While Generating Access and Rreferesh Token");
+    throw new ApiError(
+      500,
+      "SomeThing Went Wrong While Generating Access and Rreferesh Token",
+    );
   }
-}
+};
 
 // Register User Controller
 const registerUser = asyncHandler(async (req, res) => {
@@ -54,13 +57,13 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   // Generating Token.
-  const {accessToken, refreshToken} = await generrateToken(user._id)
+  const { accessToken, refreshToken } = await generrateToken(user._id);
 
   // Setting Cookie.
   const options = {
     httpOnly: true,
     secure: true,
-  }
+  };
 
   // Removing Password and Refresh Token field from response.
   const createdUser = await User.findById(user._id).select(
@@ -84,27 +87,24 @@ const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   // Validating is email and password coming properly or not
-  if (!email || !password)
-    throw new ApiError(400, "All fields are required");
+  if (!email || !password) throw new ApiError(400, "All fields are required");
 
   // Validating is user exists or not
   const user = await User.findOne({ email });
-  if (!user)
-    throw new ApiError(404, "User not found");
+  if (!user) throw new ApiError(404, "User not found");
 
   // Checking is password correct or not
   const isPasswordValid = await user.isPasswordCorrect(password);
-  if (!isPasswordValid)
-    throw new ApiError(401, "Invalid password");
+  if (!isPasswordValid) throw new ApiError(401, "Invalid password");
 
   // Generating Token.
-  const {accessToken, refreshToken} = await generrateToken(user._id)
+  const { accessToken, refreshToken } = await generrateToken(user._id);
 
   // Setting Cookie.
   const options = {
     httpOnly: true,
     secure: true,
-  }
+  };
 
   // Removing Password and Refresh Token field from response.
   const loggedInUser = await User.findById(user._id).select(
@@ -123,4 +123,43 @@ const loginUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, loggedInUser, "User Logged In Successfully"));
 });
 
-export { registerUser, loginUser };
+// Logout User Controller
+const logoutUser = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $unset: {
+        refreshToken: 1,
+      },
+    },
+    {
+      new: true,
+    },
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User Logged Out Successfully"));
+});
+
+// Get Current User Controller.
+const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).select(
+    "-password -refreshToken",
+  );
+
+  // Validating is user exists or not
+  if (!user) throw new ApiError(404, "User not found");
+
+  // Returning API Response.
+  return res.status(200).json(new ApiResponse(200, user, "User"));
+});
+
+export { registerUser, loginUser, logoutUser, getCurrentUser };
