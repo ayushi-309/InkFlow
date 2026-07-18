@@ -2,7 +2,7 @@ import { RiMenuLine, RiLoader4Line, RiCheckLine } from "@remixicon/react";
 
 const PostActionBar = ({ status, isSaving, handleSave, setIsSidebarOpen }) => {
   return (
-    <header className="flex items-center justify-between px-6 lg:px-8 py-4 border-b border-slate-100 flex-shrink-0">
+    <header className="flex flex-wrap items-center justify-between gap-4 px-6 lg:px-8 py-4 border-b border-slate-100 flex-shrink-0">
       <div className="flex items-center gap-4">
         <button
           onClick={() => setIsSidebarOpen(true)}

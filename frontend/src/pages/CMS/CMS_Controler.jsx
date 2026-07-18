@@ -12,11 +12,11 @@ const CMS_Controler = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
+    <div className="flex h-[100dvh] overflow-hidden bg-slate-50">
       <CMSSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       {/* Main content — scrolls independently */}
-      <main className="flex-1 flex flex-col overflow-y-auto px-6 lg:px-8 py-8 min-w-0 min-h-0">
+      <main className="flex-1 flex flex-col overflow-y-auto min-w-0 min-h-0 bg-slate-50">
         <Outlet context={{ setIsSidebarOpen }} />
       </main>
     </div>

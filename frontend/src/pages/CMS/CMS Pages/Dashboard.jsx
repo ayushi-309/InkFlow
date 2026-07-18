@@ -84,7 +84,7 @@ const Dashboard = () => {
   );
 
   return (
-    <>
+    <div className="flex flex-col flex-1 px-6 lg:px-8 py-8 w-full max-w-7xl mx-auto">
       <div className="flex-shrink-0">
         <CMSHeader
           title="Overview"
@@ -114,7 +114,7 @@ const Dashboard = () => {
       <div className="mt-auto flex-shrink-0">
         <CMSFooter />
       </div>
-    </>
+    </div>
   );
 };
 

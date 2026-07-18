@@ -120,7 +120,7 @@ const CMSSidebar = ({ isOpen, onClose }) => {
   return (
     <>
       {/* ── Desktop: always-visible sidebar ── */}
-      <div className="hidden lg:flex h-screen flex-shrink-0">
+      <div className="hidden lg:flex h-[100dvh] flex-shrink-0">
         {sidebarContent}
       </div>
 

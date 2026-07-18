@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { EditorContent } from '@tiptap/react';
 import { RiArrowDownSLine } from "@remixicon/react";
 import FormattingToolbar from "./FormattingToolbar";
@@ -12,17 +13,27 @@ const PostEditor = ({
   categoryRef,
   editor
 }) => {
+  const titleRef = useRef(null);
+
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.style.height = "auto";
+      titleRef.current.style.height = titleRef.current.scrollHeight + "px";
+    }
+  }, [title]);
+
   return (
     <div className="lg:flex-1 lg:overflow-y-auto hide-scrollbar lg:border-r border-slate-100 flex flex-col">
       <div className="max-w-3xl mx-auto w-full px-6 lg:px-12 py-10 flex flex-col h-full">
         
         {/* Title Input */}
-        <input
-          type="text"
+        <textarea
+          ref={titleRef}
+          rows={1}
           placeholder="Post Title..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full font-serif text-4xl sm:text-[2.75rem] font-bold text-slate-900 placeholder:text-slate-300 outline-none leading-tight mb-8 bg-transparent"
+          className="w-full font-serif text-4xl sm:text-[2.75rem] font-bold text-slate-900 placeholder:text-slate-300 outline-none leading-tight mb-8 bg-transparent resize-none overflow-hidden"
         />
 
         {/* Metadata Row */}
@@ -37,7 +48,7 @@ const PostEditor = ({
                 type="text"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
-                className="flex-1 outline-none text-indigo-600 hover:text-indigo-700 transition-colors ml-0.5 bg-transparent"
+                className="flex-1 min-w-0 outline-none text-indigo-600 hover:text-indigo-700 transition-colors ml-0.5 bg-transparent"
               />
             </div>
           </div>
