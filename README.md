@@ -10,3 +10,21 @@ Developed by: **Ayushi Tiwari**
   * Tailwind CSS
   * JavaScript
   * TipTap WIP(Web Editor Project)
+  
+* **Backend:**
+  * Node.js
+  * Express.js
+  * MongoDB
+  * JWT Auth 
+  * Bcrypt
+  * Multer
+  * Cloudinary
+
+* **Database:**
+  * MongoDB
+* **APIs:**
+  * RESTful APIs
+
+* **Tools:**
+  * Git
+  * GitHub
