@@ -19,15 +19,13 @@ app.use(cookieParser());
 
 // Health Check Route...
 app.get("/", (req, res) => {
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        {},
-        "Server is running"
-      )
-    );
+  return res.status(200).json(new ApiResponse(200, {}, "Server is running"));
 });
+
+// Routes Import...
+import userRouter from "./routes/user.router.js";
+
+// Routes Usage...
+app.use("/api/v1/user", userRouter);
 
 export { app };
