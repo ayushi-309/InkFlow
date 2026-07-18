@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import {
   RiArticleLine,
   RiEyeLine,
   RiChat1Line,
+  RiExternalLinkLine,
 } from "@remixicon/react";
 
 import { CMSHeader, StatCard, RecentPostsTable, CMSFooter } from "../../../components/index.js";
@@ -43,6 +44,7 @@ const RECENT_POSTS = [
   {
     id: "1",
     title: "The Future of Sustainable Architecture in 2024",
+    slug: "future-of-sustainable-architecture-2024",
     category: "Technology & Lifestyle",
     status: "Published",
     date: "Oct 24, 2023",
@@ -51,6 +53,7 @@ const RECENT_POSTS = [
   {
     id: "2",
     title: "Digital Minimalism: A Guide to Deep Work",
+    slug: "digital-minimalism-guide-deep-work",
     category: "Lifestyle",
     status: "Draft",
     date: "Oct 22, 2023",
@@ -59,6 +62,7 @@ const RECENT_POSTS = [
   {
     id: "3",
     title: "Understanding the Global Economic Shift",
+    slug: "understanding-global-economic-shift",
     category: "Business",
     status: "Published",
     date: "Oct 20, 2023",
@@ -67,6 +71,7 @@ const RECENT_POSTS = [
   {
     id: "4",
     title: "Beyond Silicon: Neuromorphic Edge Computing",
+    slug: "beyond-silicon-neuromorphic-edge-computing",
     category: "Technology",
     status: "Scheduled",
     date: "Oct 18, 2023",
@@ -77,6 +82,7 @@ const RECENT_POSTS = [
 /* ─────────────────────────────── Component ─────────────────────────────── */
 const Dashboard = () => {
   const { setIsSidebarOpen } = useOutletContext();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
   const filteredPosts = RECENT_POSTS.filter((p) =>
@@ -92,6 +98,11 @@ const Dashboard = () => {
           searchValue={search}
           onSearchChange={setSearch}
           onMenuClick={() => setIsSidebarOpen(true)}
+          primaryAction={{
+            label: "Exit to Site",
+            icon: <RiExternalLinkLine size={15} />,
+            onClick: () => navigate("/")
+          }}
         />
       </div>
 
@@ -106,7 +117,7 @@ const Dashboard = () => {
       <div className="flex-shrink-0 mb-8">
         <RecentPostsTable
           posts={filteredPosts}
-          onEdit={(post) => console.log("Edit", post.id)}
+          onEdit={(post) => navigate(`/posts?slug=${post.slug}`)}
           onDelete={(post) => console.log("Delete", post.id)}
         />
       </div>

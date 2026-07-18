@@ -4,7 +4,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 
 import {
   PostActionBar,
@@ -14,12 +14,16 @@ import {
 
 const Posts = () => {
   const { setIsSidebarOpen } = useOutletContext();
+  const [searchParams] = useSearchParams();
+  const urlSlug = searchParams.get("slug");
 
   // Form State
   const [title, setTitle] = useState(
-    "The Future of Distributed Editorial Teams",
+    urlSlug 
+      ? urlSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+      : "The Future of Distributed Editorial Teams"
   );
-  const [slug, setSlug] = useState("future-editorial-workflow");
+  const [slug, setSlug] = useState(urlSlug || "future-editorial-workflow");
   const [category, setCategory] = useState("Business");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const editor = useEditor({
