@@ -4,4 +4,9 @@ Developed by: **Ayushi Tiwari**
 
 ## Tech Stack
 
-* **Frontend:** React.js, Redux, Tailwind CSS, JavaScript
+* **Frontend:** 
+  * React.js
+  * Redux
+  * Tailwind CSS
+  * JavaScript
+  * TipTap WIP(Web Editor Project)

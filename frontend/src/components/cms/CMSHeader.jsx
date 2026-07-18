@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { RiSearchLine, RiAddLine, RiMenuLine } from "@remixicon/react";
 
-const CMSHeader = ({ title, subtitle, searchValue, onSearchChange, onMenuClick, primaryAction, hideSearch }) => (
+const CMSHeader = ({ title, subtitle, searchValue, onSearchChange, onMenuClick, primaryAction, hideSearch, hideAction }) => (
   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
     <div className="flex items-start gap-3">
       {/* Mobile Hamburger Menu */}
@@ -40,21 +40,23 @@ const CMSHeader = ({ title, subtitle, searchValue, onSearchChange, onMenuClick, 
       )}
 
       {/* Action Button */}
-      {primaryAction ? (
-        <button
-          onClick={primaryAction.onClick}
-          className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 active:scale-[0.98] text-white text-[13px] font-bold px-4 py-2 rounded-xl transition-all duration-200 whitespace-nowrap"
-        >
-          {primaryAction.icon && primaryAction.icon}
-          {primaryAction.label}
-        </button>
-      ) : (
-        <Link
-          to="/posts"
-          className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 active:scale-[0.98] text-white text-[13px] font-bold px-4 py-2 rounded-xl transition-all duration-200 whitespace-nowrap"
-        >
-          <RiAddLine size={15} /> New Post
-        </Link>
+      {!hideAction && (
+        primaryAction ? (
+          <button
+            onClick={primaryAction.onClick}
+            className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 active:scale-[0.98] text-white text-[13px] font-bold px-4 py-2 rounded-xl transition-all duration-200 whitespace-nowrap"
+          >
+            {primaryAction.icon && primaryAction.icon}
+            {primaryAction.label}
+          </button>
+        ) : (
+          <Link
+            to="/posts"
+            className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 active:scale-[0.98] text-white text-[13px] font-bold px-4 py-2 rounded-xl transition-all duration-200 whitespace-nowrap"
+          >
+            <RiAddLine size={15} /> New Post
+          </Link>
+        )
       )}
     </div>
   </div>
