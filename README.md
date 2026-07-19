@@ -19,6 +19,7 @@ Developed by: **Ayushi Tiwari**
   * Bcrypt
   * Multer
   * Cloudinary
+  * Nodemailer
 
 * **Database:**
   * MongoDB
