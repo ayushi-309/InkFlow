@@ -6,6 +6,8 @@ import {
   getAllBlogsForAdmin,
   deleteBlog,
   updateBlog,
+  getAllPostsForUsers,
+  getBlogBySlug,
 } from "../controllers/blog.controller.js";
 
 const router = Router();
@@ -26,5 +28,7 @@ router
     verifyJWT,
     updateBlog,
   );
+router.route("/get-all-posts").get(getAllPostsForUsers);
+router.route("/posts/:slug").get(getBlogBySlug);
 
 export default router;

@@ -215,5 +215,41 @@ const updateBlog = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, blog, "Blog updated successfully"));
 });
 
+// Get All Post for users controller
+const getAllPostsForUsers = asyncHandler(async (req, res) => {
+  const posts = await Blog.find({
+    status: "published",
+  })
+    .populate("tags")
+    .populate("author", "-password -refreshToken");
 
-export { createBlog, getAllBlogsForAdmin, deleteBlog, updateBlog };
+  if (!posts)
+    return res.status(200).json(new ApiResponse(200, [], "No posts found"));
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, posts, "Posts fetched successfully"));
+});
+
+// Get Blog by slug
+const getBlogBySlug = asyncHandler(async (req, res) => {
+  const { slug } = req.params;
+  const blog = await Blog.findOne({ slug })
+    .populate("tags")
+    .populate("author", "-password -refreshToken");
+  
+  if (!blog)
+    return res.status(200).json(new ApiResponse(200, [], "No blog found"));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, blog, "Blog fetched successfully"));
+});
+
+export {
+  createBlog,
+  getAllBlogsForAdmin,
+  deleteBlog,
+  updateBlog,
+  getAllPostsForUsers,
+  getBlogBySlug,
+};
