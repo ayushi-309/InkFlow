@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { uploadOnCloudnary } from "../utils/cloudnary.js";
+import { uploadOnCloudnary, deleteOnCloudnary } from "../utils/cloudnary.js";
 import { Otp } from "../models/otp.model.js";
 
 // Methode to Generate Access Token and Refresh Token.
@@ -184,7 +184,12 @@ const updateProfile = asyncHandler(async (req, res) => {
   if (!user) throw new ApiError(404, "User not found");
 
   // Updating avatar if exists.
-  if (avatarImage?.url) user.avatar = avatarImage?.url;
+  if (avatarImage?.url) {
+    if (user.avatar) {
+      await deleteOnCloudnary(user.avatar);
+    }
+    user.avatar = avatarImage.url;
+  }
   await user.save({ validateBeforeSave: false });
 
   const updatedUser = await User.findById(req.user._id).select(
