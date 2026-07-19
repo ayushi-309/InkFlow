@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudnary, deleteOnCloudnary } from "../utils/cloudnary.js";
 import { Otp } from "../models/otp.model.js";
+import sendMail from "../utils/sendMail.js";
 
 // Methode to Generate Access Token and Refresh Token.
 const generrateToken = async (id) => {
@@ -249,7 +250,10 @@ const forgetPassword = asyncHandler(async (req, res) => {
   // Generating Random 6 Digit OTP.
   const OTP = Math.floor(100000 + Math.random() * 900000);
 
-  // TODO: Sending Mail to Email.
+  // Sending Mail to Email.
+  const mailResponse = await sendMail(email, "OTP for Forget Password | InkFlow", OTP);
+  if (!mailResponse) throw new ApiError(500, "Something went wrong");
+
 
   // Saving OTP
   const otp = await Otp.create({
