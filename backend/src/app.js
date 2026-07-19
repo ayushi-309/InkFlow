@@ -24,8 +24,10 @@ app.get("/", (req, res) => {
 
 // Routes Import...
 import userRouter from "./routes/user.router.js";
+import blogRouter from "./routes/blog.router.js";
 
 // Routes Usage...
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/blog", blogRouter);
 
 export { app };
