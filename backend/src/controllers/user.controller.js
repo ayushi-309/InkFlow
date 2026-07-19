@@ -162,4 +162,71 @@ const getCurrentUser = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, user, "User"));
 });
 
-export { registerUser, loginUser, logoutUser, getCurrentUser };
+// Update User Profile Controller.
+const updateProfile = asyncHandler(async (req, res) => {
+  let localFilePath;
+
+  // Checking if avatar is coming properly or not.
+  if (
+    req.files &&
+    Array.isArray(req.files.avatar) &&
+    req.files.avatar.length > 0
+  ) {
+    localFilePath = req.files.avatar[0].path;
+  }
+
+  // Uploading avatar on Cloudnary if exists.
+  const avatarImage = await uploadOnCloudnary(localFilePath);
+
+  // Validating is user exists or not
+  const user = await User.findById(req.user._id);
+  if (!user) throw new ApiError(404, "User not found");
+
+  // Updating avatar if exists.
+  if (avatarImage?.url) user.avatar = avatarImage?.url;
+  await user.save({ validateBeforeSave: false });
+
+  const updatedUser = await User.findById(req.user._id).select(
+    "-password -refreshToken",
+  );
+
+  // Returning API Response.
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, updatedUser, "User Profile Updated Successfully"),
+    );
+});
+
+// Update User details Controller.
+const updateUserDetails = asyncHandler(async (req, res) => {
+  const { fullname, bio } = req.body;
+
+  const user = await User.findById(req.user._id);
+  if (!user) throw new ApiError(404, "User not found");
+
+  if (fullname) user.fullname = fullname;
+  if (bio) user.bio = bio;
+
+  await user.save({ validateBeforeSave: false });
+
+  const updatedUser = await User.findById(req.user._id).select(
+    "-password -refreshToken",
+  );
+
+  // Returning API Response.
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, updatedUser, "User Details Updated Successfully"),
+    );
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  getCurrentUser,
+  updateProfile,
+  updateUserDetails,
+};
