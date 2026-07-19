@@ -8,6 +8,9 @@ import {
   getCurrentUser,
   updateProfile,
   updateUserDetails,
+  forgetPassword,
+  verifyOTP,
+  newPassword,
 } from "../controllers/user.controller.js";
 
 const router = Router();
@@ -27,5 +30,8 @@ router
     updateProfile,
   );
 router.route("/update-details").patch(verifyJWT, updateUserDetails);
+router.route("/forget-password").post(forgetPassword);
+router.route("/verify-otp").post(verifyOTP);
+router.route("/new-password").post(newPassword);
 
 export default router;

@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudnary } from "../utils/cloudnary.js";
+import { Otp } from "../models/otp.model.js";
 
 // Methode to Generate Access Token and Refresh Token.
 const generrateToken = async (id) => {
@@ -222,6 +223,91 @@ const updateUserDetails = asyncHandler(async (req, res) => {
     );
 });
 
+/**
+ * Forget Password Controller...
+ *  STEP 1 -> USER send email to Backend server and server send OTP to that email.
+ *  STEP 2 -> User Verify that OTP.
+ *  STEP 3 -> User send New Password and server Update Password.
+ */
+
+// STEP 1 -> send OTP Controller
+const forgetPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  // Validating is emial is coming properly or not.
+  if (!email) throw new ApiError(400, "Email is required");
+
+  // Validating is user exists or not.
+  const user = await User.findOne({ email });
+  if (!user) throw new ApiError(404, "User not found");
+
+  // Generating Random 6 Digit OTP.
+  const OTP = Math.floor(100000 + Math.random() * 900000);
+
+  // TODO: Sending Mail to Email.
+
+  // Saving OTP
+  const otp = await Otp.create({
+    owner: user._id,
+    otp: OTP,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "OTP Sent Successfully",
+    data: {},
+  });
+});
+
+// STEP 2 -> Verify OTP Controller
+const verifyOTP = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body;
+  // Validating is email is coming properly or not.
+  if (!email || !otp) throw new ApiError(400, "Email and OTP are required");
+
+  // Finding User
+  const user = await User.findOne({ email });
+  if (!user) throw new ApiError(404, "User not found");
+
+  // Finding Otp
+  const dbOtp = await Otp.findOne({ owner: user._id });
+  if (!dbOtp) throw new ApiError(404, "OTP not found");
+
+  // Verifying OTP.
+  if (otp !== dbOtp.otp) throw new ApiError(401, "Invalid OTP");
+
+  // Deleting OTP after successful verification.
+  await Otp.deleteOne({ owner: user._id });
+
+  res.status(200).json({
+    success: true,
+    message: "OTP Verified Successfully",
+    data: {},
+  });
+});
+
+// STEP 3 -> New Password Controller
+const newPassword = asyncHandler(async (req, res) => {
+  const { email, password1, password2 } = req.body;
+
+  // Validating is email and password are coming properly or not.
+  if (!email || !password1 || !password2)
+    throw new ApiError(400, "Email and Password are required");
+  if (password1 !== password2)
+    throw new ApiError(400, "Passwords do not match");
+
+  const user = await User.findOne({ email });
+  if (!user) throw new ApiError(404, "User not found");
+
+  user.password = password1;
+  await user.save({ validateBeforeSave: false });
+
+  // Returning API Response.
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password Changed Successfully"));
+});
+
 export {
   registerUser,
   loginUser,
@@ -229,4 +315,7 @@ export {
   getCurrentUser,
   updateProfile,
   updateUserDetails,
+  forgetPassword,
+  verifyOTP,
+  newPassword,
 };
