@@ -51,10 +51,10 @@ const createBlog = asyncHandler(async (req, res) => {
         const tag = await Tag.findOneAndUpdate(
           { tagName: tagName.trim() },
           { $setOnInsert: { tagName: tagName.trim() } },
-          { upsert: true, new: true }
+          { upsert: true, new: true },
         );
         return tag._id;
-      })
+      }),
     );
   }
 
@@ -73,7 +73,7 @@ const createBlog = asyncHandler(async (req, res) => {
   if (tagIds.length > 0) {
     await Tag.updateMany(
       { _id: { $in: tagIds } },
-      { $push: { blogs: blog._id } }
+      { $push: { blogs: blog._id } },
     );
   }
 
@@ -90,7 +90,7 @@ const createBlog = asyncHandler(async (req, res) => {
 // Get All Blog for Admin controller
 const getAllBlogsForAdmin = asyncHandler(async (req, res) => {
   // Finding user blog and filter all blog to author id
-  const blog = await Blog.find({ author: req.user._id }).populate("tags")
+  const blog = await Blog.find({ author: req.user._id }).populate("tags");
 
   if (blog) {
     return res
@@ -98,11 +98,37 @@ const getAllBlogsForAdmin = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, blog, "Blogs Fetched Successfully"));
   }
 
+  return res.status(200).json(new ApiResponse(200, [], "No Blogs Found"));
+});
+
+// Delete Blog controller
+const deleteBlog = asyncHandler(async (req, res) => {
+  const { blogId } = req.params;
+
+  // Validating if blog id is provided or not
+  if (!blogId) throw new ApiError(400, "Blog ID is required");
+
+  // Finding blog by id
+  const blog = await Blog.findById(blogId);
+  if (!blog) throw new ApiError(404, "Blog not found");
+
+  // Checking authorization
+  if (blog.author.toString() !== req.user._id.toString())
+    throw new ApiError(401, "Unauthorized");
+
+  // Deleting
+  await blog.deleteOne();
+
+  // Removing from tag's blog array
+  await Tag.updateMany(
+    { _id: { $in: blog.tags } },
+    { $pull: { blogs: blog._id } },
+  );
+
+  // Returning API Response
   return res
     .status(200)
-    .json(new ApiResponse(200, [], "No Blogs Found"));
-})
+    .json(new ApiResponse(200, blog, "Blog deleted successfully"));
+});
 
-
-
-export { createBlog, getAllBlogsForAdmin };
+export { createBlog, getAllBlogsForAdmin, deleteBlog };

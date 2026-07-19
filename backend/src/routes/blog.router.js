@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import { createBlog, getAllBlogsForAdmin } from "../controllers/blog.controller.js";
+import { createBlog, getAllBlogsForAdmin, deleteBlog } from "../controllers/blog.controller.js";
 
 const router = Router();
 
@@ -11,5 +11,6 @@ router.route("/create-blog").post(
   createBlog,
 );
 router.route("/get-user-blogs").get(verifyJWT, getAllBlogsForAdmin);
+router.route("/delete-blog/:blogId").delete(verifyJWT, deleteBlog);
 
 export default router;
