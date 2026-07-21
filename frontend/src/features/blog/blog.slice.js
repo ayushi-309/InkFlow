@@ -67,6 +67,20 @@ export const getUserPosts = createAsyncThunk(
   },
 );
 
+// delete Blog
+export const deleteBlog = createAsyncThunk(
+  "deleteBlog",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await axios.delete(`/api/blog/delete-blog/${id}`, {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  },
+);
 
 export const blogSlice = createSlice({
   name: "blog",
@@ -119,6 +133,19 @@ export const blogSlice = createSlice({
       state.userBlogs = action.payload;
     });
     builder.addCase(getUserPosts.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // Delete Blog
+    builder.addCase(deleteBlog.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteBlog.fulfilled, (state, action) => {
+      state.loading = false;
+      state.deleteBlog = action.payload;
+    });
+    builder.addCase(deleteBlog.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
