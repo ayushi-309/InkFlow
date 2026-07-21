@@ -238,6 +238,9 @@ const getBlogBySlug = asyncHandler(async (req, res) => {
     .populate("tags")
     .populate("author", "-password -refreshToken");
   
+  blog.views += 1;
+  await blog.save();
+  
   if (!blog)
     return res.status(200).json(new ApiResponse(200, [], "No blog found"));
   return res
