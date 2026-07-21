@@ -1,9 +1,12 @@
 import { RiArrowDownSLine, RiUploadCloudLine, RiCloseLine, RiDeleteBinLine } from "@remixicon/react";
+import { useSelector } from "react-redux";
 
 const PostSidebar = ({
   image, handleImageUpload, fileInputRef,
   tags, newTag, setNewTag, handleAddTag, handleRemoveTag
 }) => {
+  const user = useSelector((state) => state.user?.data?.data);
+
   return (
     <aside className="w-full lg:w-[320px] xl:w-[360px] bg-slate-50/50 flex flex-col flex-shrink-0 lg:overflow-y-auto">
       
@@ -96,11 +99,16 @@ const PostSidebar = ({
           <div className="flex items-center justify-between">
             <span className="text-[13px] font-medium text-slate-600">Author</span>
             <div className="flex items-center gap-2 cursor-pointer group">
-              <div className="w-5 h-5 rounded-full bg-slate-200 overflow-hidden">
-                 <img src="/images/avatar.jpg" alt="Author" className="w-full h-full object-cover" 
-                      onError={(e) => e.target.style.display = 'none'} />
+              <div className="w-5 h-5 rounded-full bg-slate-200 overflow-hidden flex items-center justify-center text-[10px] font-bold text-slate-500 relative">
+                 {user?.fullname?.substring(0, 2).toUpperCase()}
+                 {user?.avatar && (
+                   <img src={user.avatar} alt="Author" className="absolute inset-0 w-full h-full object-cover z-10" 
+                        onError={(e) => e.target.style.display = 'none'} />
+                 )}
               </div>
-              <span className="text-[13px] font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">J. Thorne</span>
+              <span className="text-[13px] font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                {user?.fullname || "Unknown User"}
+              </span>
             </div>
           </div>
         </div>

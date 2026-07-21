@@ -1,10 +1,16 @@
 import { useState, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { createBlog } from "../../../features/blog/blog.slice.js";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
-import { useOutletContext, useSearchParams } from "react-router-dom";
+import {
+  useOutletContext,
+  useSearchParams,
+  useNavigate,
+} from "react-router-dom";
 
 import {
   PostActionBar,
@@ -16,15 +22,20 @@ const Posts = () => {
   const { setIsSidebarOpen } = useOutletContext();
   const [searchParams] = useSearchParams();
   const urlSlug = searchParams.get("slug");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Form State
   const [title, setTitle] = useState(
-    urlSlug 
-      ? urlSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-      : "The Future of Distributed Editorial Teams"
+    urlSlug
+      ? urlSlug
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")
+      : "",
   );
-  const [slug, setSlug] = useState(urlSlug || "future-editorial-workflow");
-  const [category, setCategory] = useState("Business");
+  const [slug, setSlug] = useState(urlSlug || "");
+  const [category, setCategory] = useState("Lifestyle");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const editor = useEditor({
     extensions: [
@@ -33,7 +44,7 @@ const Posts = () => {
       Link.configure({ openOnClick: false }),
       Image,
     ],
-    content: `In the rapidly evolving landscape of digital journalism, the infrastructure supporting editorial teams has become as critical as the content itself. As we transition toward more decentralized models, the tools we use must facilitate not just writing, but orchestration.<br><br>Consider the traditional newsroom: a hub of physical activity where proximity drove collaboration. Today, that proximity is digital. A modern CMS like InkFlow isn't just a database for articles; it's a synchronous platform for real-time iteration.<br><br><blockquote>"The efficiency of an editorial team is inversely proportional to the number of tools they have to switch between to publish a single story."</blockquote><br><br>We are seeing a shift toward "headless" architectures that allow content to be decoupled from its presentation layer. This flexibility is no longer a luxury—it is the prerequisite for multi-channel dominance in an age of fragmented attention.`,
+    content: "",
     editorProps: {
       attributes: {
         class:
@@ -42,10 +53,11 @@ const Posts = () => {
     },
   });
 
-  const [image, setImage] = useState("/images/neuromorphic_computing.png");
-  const [tags, setTags] = useState(["Technology", "Workflow"]);
+  const [image, setImage] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [tags, setTags] = useState([]);
   const [newTag, setNewTag] = useState("");
-  const [status, setStatus] = useState("Draft");
+  const [status, setStatus] = useState("draft");
   const [isSaving, setIsSaving] = useState(false);
 
   const fileInputRef = useRef(null);
@@ -55,6 +67,7 @@ const Posts = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => setImage(reader.result);
       reader.readAsDataURL(file);
@@ -77,21 +90,33 @@ const Posts = () => {
 
   const handleSave = (newStatus) => {
     setIsSaving(true);
-    console.log({
-      status: newStatus,
-      title,
-      slug,
-      category,
-      content: editor?.getHTML(),
-      image,
-      tags
-    });
-    // Simulate API call
-    setTimeout(() => {
-      setStatus(newStatus);
-      setIsSaving(false);
-      // In a real app, you would show a success toast here
-    }, 800);
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("slug", slug);
+    formData.append("category", category);
+    formData.append("content", editor?.getHTML());
+    formData.append("status", String(newStatus).toLowerCase());
+
+    tags.forEach((tag) => formData.append("tags", tag));
+
+    if (imageFile) {
+      formData.append("featuredImage", imageFile);
+    }
+
+    dispatch(createBlog(formData))
+      .unwrap()
+      .then(() => {
+        setStatus(newStatus);
+        alert("Blog post saved successfully!");
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        alert(err?.message || "Failed to save blog post.");
+      })
+      .finally(() => {
+        setIsSaving(false);
+      });
   };
 
   return (
@@ -106,10 +131,7 @@ const Posts = () => {
       <div className="block lg:flex flex-1 min-h-0 overflow-y-auto lg:overflow-hidden">
         <PostEditor
           title={title}
-          setTitle={(newTitle) => {
-            setTitle(newTitle);
-            setSlug(newTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''));
-          }}
+          setTitle={setTitle}
           slug={slug}
           setSlug={setSlug}
           category={category}

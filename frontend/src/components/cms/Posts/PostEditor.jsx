@@ -33,7 +33,7 @@ const PostEditor = ({
           placeholder="Post Title..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full font-serif text-4xl sm:text-[2.75rem] font-bold text-slate-900 placeholder:text-slate-300 outline-none leading-tight mb-8 bg-transparent resize-none overflow-hidden"
+          className="w-full font-serif text-2xl sm:text-2xl font-bold text-slate-900 placeholder:text-slate-300 outline-none leading-tight mb-8 bg-transparent resize-none overflow-hidden"
         />
 
         {/* Metadata Row */}
@@ -49,6 +49,7 @@ const PostEditor = ({
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
                 className="flex-1 min-w-0 outline-none text-indigo-600 hover:text-indigo-700 transition-colors ml-0.5 bg-transparent"
+                placeholder="Enter slug"
               />
             </div>
           </div>
@@ -92,6 +93,9 @@ const PostEditor = ({
 
         {/* Editor Textarea */}
         <div className="flex-1 w-full flex flex-col min-h-[400px] overflow-x-hidden">
+          <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+            Post Content
+          </label>
           <EditorContent editor={editor} className="flex-1" />
         </div>
       </div>

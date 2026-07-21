@@ -33,6 +33,25 @@ export const getSingleBlog = createAsyncThunk(
   },
 );
 
+// Create Blog
+export const createBlog = createAsyncThunk(
+  "createBlog",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await axios.post("/api/blog/create-blog", data,{
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+      console.log("Create blog response:", res.data);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  },
+);
+
 export const blogSlice = createSlice({
   name: "blog",
   initialState,
@@ -58,6 +77,19 @@ export const blogSlice = createSlice({
       state.singleBlog = action.payload;
     });
     builder.addCase(getSingleBlog.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // Create Blog
+    builder.addCase(createBlog.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(createBlog.fulfilled, (state, action) => {
+      state.loading = false;
+      state.createBlog = action.payload;
+    });
+    builder.addCase(createBlog.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });

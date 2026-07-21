@@ -84,7 +84,6 @@ export const updateProfileDetail = createAsyncThunk(
         },
         withCredentials: true,
       });
-      console.log("Update profile detail response:", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
