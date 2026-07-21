@@ -6,7 +6,6 @@ import ForgetPassword from "./Authentication/Auth Pages/ForgetPassword.jsx";
 import AuthControler from "./Authentication/AuthControler.jsx";
 import Dashboard from "./CMS/CMS Pages/Dashboard.jsx";
 import Posts from "./CMS/CMS Pages/Posts.jsx";
-import Categories from "./CMS/CMS Pages/Categories.jsx";
 import User from "./CMS/CMS Pages/User.jsx";
 import CMS_Controler from "./CMS/CMS_Controler.jsx";
 
@@ -19,7 +18,6 @@ export {
   AuthControler,
   Dashboard,
   Posts,
-  Categories,
   User,
   CMS_Controler,
 };

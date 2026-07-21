@@ -12,7 +12,6 @@ const AuthProvider = ({ children }) => {
     dispatch(getUser())
       .unwrap()
       .then((data) => {
-        console.log(data);
         if (data) {
           setIsUserLogin(true);
         }

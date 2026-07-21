@@ -55,6 +55,43 @@ export const logoutUser = createAsyncThunk(
   },
 );
 
+// Update user Profile Photo
+export const updateProfilePhoto = createAsyncThunk(
+  "user/updateProfilePhoto",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch("/api/user/update-profile", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// Update User Detail
+export const updateProfileDetail = createAsyncThunk(
+  "user/updateProfileDetail",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch("/api/user/update-details", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      console.log("Update profile detail response:", response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -99,6 +136,34 @@ export const userSlice = createSlice({
       state.data = null;
     });
     builder.addCase(logoutUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // Update profile photo
+    builder.addCase(updateProfilePhoto.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(updateProfilePhoto.fulfilled, (state, action) => {
+      state.loading = false;
+      state.data = action.payload;
+    });
+    builder.addCase(updateProfilePhoto.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // Update profile detail
+    builder.addCase(updateProfileDetail.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(updateProfileDetail.fulfilled, (state, action) => {
+      state.loading = false;
+      state.data = action.payload;
+    });
+    builder.addCase(updateProfileDetail.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });

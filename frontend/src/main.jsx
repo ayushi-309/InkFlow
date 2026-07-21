@@ -13,7 +13,6 @@ import {
   AuthControler,
   Dashboard,
   Posts,
-  Categories,
   User,
   CMS_Controler,
 } from "./pages/index.js";
@@ -64,10 +63,6 @@ const router = createBrowserRouter([
       {
         path: "/posts",
         element: <Posts />,
-      },
-      {
-        path: "/categories",
-        element: <Categories />,
       },
       {
         path: "/user",

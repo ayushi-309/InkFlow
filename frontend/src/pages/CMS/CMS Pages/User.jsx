@@ -1,19 +1,33 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { CMSHeader } from "../../../components/index.js";
 import { RiLoader4Line } from "@remixicon/react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateProfilePhoto, updateProfileDetail } from "../../../features/user/user.slice.js";
 
 const User = () => {
   const { setIsSidebarOpen } = useOutletContext();
   const fileInputRef = useRef(null);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user?.data?.data);
+  
 
-  const [name, setName] = useState("Admin User");
-  const [email, setEmail] = useState("editor@chronicle.com");
-  const [description, setDescription] = useState("Lead Editor focusing on deep-dive technology journalism.");
-  const [avatarPreview, setAvatarPreview] = useState("/images/avatar.jpg");
+  const [name, setName] = useState(user?.fullname);
+  const [email, setEmail] = useState(user?.email);
+  const [description, setDescription] = useState(user?.bio);
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar);
   const [avatarFile, setAvatarFile] = useState(null);
   
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.fullname || "");
+      setEmail(user.email || "");
+      setDescription(user.bio || "");
+      if (user.avatar) setAvatarPreview(user.avatar);
+    }
+  }, [user]);
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -25,6 +39,18 @@ const User = () => {
       setAvatarFile(file);
       const imageUrl = URL.createObjectURL(file);
       setAvatarPreview(imageUrl);
+
+      const formData = new FormData();
+      formData.append("avatar", file);
+      
+      dispatch(updateProfilePhoto(formData))
+        .unwrap()
+        .then(() => {
+          alert("Avatar updated successfully!");
+        })
+        .catch((err) => {
+          alert(err?.message || "Failed to update avatar.");
+        });
     }
   };
 
@@ -32,16 +58,20 @@ const User = () => {
     e.preventDefault();
     setIsSaving(true);
     
-    // Simulate an API call
-    setTimeout(() => {
-      console.log("User Profile Submitted:", {
-        name,
-        email,
-        description,
-        avatarFile: avatarFile ? avatarFile.name : "Unchanged"
+    const data = {
+      fullname: name,
+      bio: description,
+    };
+    
+    dispatch(updateProfileDetail(data))
+      .unwrap()
+      .then(() => {
+        alert("Profile updated successfully!");
+      })
+      .catch((err) => {
+        alert(err?.message || "Failed to update profile.");
       });
-      setIsSaving(false);
-    }, 800);
+    setIsSaving(false);
   };
 
   return (
@@ -103,7 +133,7 @@ const User = () => {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              disabled
               className="w-full bg-slate-50 border border-slate-200 text-slate-900 text-[15px] px-4 py-2.5 rounded-xl outline-none focus:bg-white focus:border-indigo-500 transition-all"
             />
           </div>

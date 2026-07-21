@@ -5,7 +5,6 @@ import { useAuth } from "../../hooks/CustomLoginHook.jsx";
 import {
   RiDashboardLine,
   RiArticleLine,
-  RiPriceTag3Line,
   RiUser3Line,
   RiAddLine,
   RiLogoutBoxRLine,
@@ -22,11 +21,6 @@ const NAV_LINKS = [
     label: "Posts",
     to: "/posts",
     icon: RiArticleLine
-  },
-  {
-    label: "Categories", 
-    to: "/categories",
-    icon: RiPriceTag3Line
   },
   { 
     label: "User", 
