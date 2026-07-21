@@ -17,6 +17,8 @@ import {
   User,
   CMS_Controler,
 } from "./pages/index.js";
+import { Provider } from "react-redux";
+import { store } from "./app/Store.js";
 
 const router = createBrowserRouter([
   {
@@ -77,8 +79,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider >
-      <RouterProvider router={router} />
-    </AuthProvider>
-  </StrictMode>,
+    <Provider store={store}>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </Provider>
+  </StrictMode>
 );
