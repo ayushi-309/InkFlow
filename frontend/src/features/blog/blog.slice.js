@@ -3,6 +3,7 @@ import axios from "axios";
 
 const initialState = {
   allBlog: [],
+  userBlogs: [],
   loading: false,
   error: null,
 };
@@ -44,13 +45,28 @@ export const createBlog = createAsyncThunk(
         },
         withCredentials: true,
       });
-      console.log("Create blog response:", res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(error);
     }
   },
 );
+
+// Get User Posts
+export const getUserPosts = createAsyncThunk(
+  "getUserPosts",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get("/api/blog/get-user-blogs", {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  },
+);
+
 
 export const blogSlice = createSlice({
   name: "blog",
@@ -90,6 +106,19 @@ export const blogSlice = createSlice({
       state.createBlog = action.payload;
     });
     builder.addCase(createBlog.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // Get User Posts
+    builder.addCase(getUserPosts.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getUserPosts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.userBlogs = action.payload;
+    });
+    builder.addCase(getUserPosts.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });

@@ -1,91 +1,76 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserPosts } from "../../../features/blog/blog.slice";
 import {
   RiArticleLine,
   RiEyeLine,
-  RiChat1Line,
+  RiCheckDoubleLine,
   RiExternalLinkLine,
 } from "@remixicon/react";
 
 import { CMSHeader, StatCard, RecentPostsTable, CMSFooter } from "../../../components/index.js";
 
-/* ── Mock data ── */
-const STATS = [
-  {
-    icon: RiArticleLine,
-    iconBg: "bg-indigo-50",
-    iconColor: "text-indigo-500",
-    label: "Total Posts",
-    value: "1,284",
-    badge: "+12%",
-    positive: true,
-  },
-  {
-    icon: RiEyeLine,
-    iconBg: "bg-slate-100",
-    iconColor: "text-slate-600",
-    label: "Monthly Views",
-    value: "84.2k",
-    badge: "+5.4k",
-    positive: true,
-  },
-  {
-    icon: RiChat1Line,
-    iconBg: "bg-rose-50",
-    iconColor: "text-rose-500",
-    label: "Total Comments",
-    value: "3,912",
-    badge: "-2%",
-    positive: false,
-  },
-];
-
-const RECENT_POSTS = [
-  {
-    id: "1",
-    title: "The Future of Sustainable Architecture in 2024",
-    slug: "future-of-sustainable-architecture-2024",
-    category: "Technology & Lifestyle",
-    status: "Published",
-    date: "Oct 24, 2023",
-    image: "/images/neuromorphic_computing.png",
-  },
-  {
-    id: "2",
-    title: "Digital Minimalism: A Guide to Deep Work",
-    slug: "digital-minimalism-guide-deep-work",
-    category: "Lifestyle",
-    status: "Draft",
-    date: "Oct 22, 2023",
-    image: "/images/slow_craft.png",
-  },
-  {
-    id: "3",
-    title: "Understanding the Global Economic Shift",
-    slug: "understanding-global-economic-shift",
-    category: "Business",
-    status: "Published",
-    date: "Oct 20, 2023",
-    image: "/images/green_pivot.png",
-  },
-  {
-    id: "4",
-    title: "Beyond Silicon: Neuromorphic Edge Computing",
-    slug: "beyond-silicon-neuromorphic-edge-computing",
-    category: "Technology",
-    status: "Scheduled",
-    date: "Oct 18, 2023",
-    image: "/images/neuromorphic_computing.png",
-  },
-];
-
 /* ─────────────────────────────── Component ─────────────────────────────── */
 const Dashboard = () => {
   const { setIsSidebarOpen } = useOutletContext();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const userBlogsData = useSelector((state) => state.blog?.userBlogs?.data);
+  const userBlogs = userBlogsData || [];
   const [search, setSearch] = useState("");
 
-  const filteredPosts = RECENT_POSTS.filter((p) =>
+  useEffect(() => {
+    dispatch(getUserPosts());
+  }, [dispatch]);
+
+  const totalViews = userBlogs.reduce((acc, curr) => acc + (curr.views || 0), 0);
+  const publishedCount = userBlogs.filter(b => b.status === "published").length;
+
+  const STATS = [
+    {
+      icon: RiArticleLine,
+      iconBg: "bg-indigo-50",
+      iconColor: "text-indigo-500",
+      label: "Total Posts",
+      value: userBlogs.length.toString(),
+      badge: "",
+      positive: true,
+    },
+    {
+      icon: RiEyeLine,
+      iconBg: "bg-slate-100",
+      iconColor: "text-slate-600",
+      label: "Total Views",
+      value: totalViews.toString(),
+      badge: "",
+      positive: true,
+    },
+    {
+      icon: RiCheckDoubleLine,
+      iconBg: "bg-emerald-50",
+      iconColor: "text-emerald-500",
+      label: "Published Posts",
+      value: publishedCount.toString(),
+      badge: "",
+      positive: true,
+    },
+  ];
+
+  const formattedPosts = [...userBlogs]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .map(post => ({
+    id: post._id,
+    title: post.title,
+    slug: post.slug,
+    category: post.category || "Uncategorized",
+    status: post.status ? post.status.charAt(0).toUpperCase() + post.status.slice(1) : "Draft",
+    date: new Date(post.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+    image: post.featuredImage || "/images/neuromorphic_computing.png",
+  }));
+
+  const filteredPosts = formattedPosts.filter((p) =>
     p.title.toLowerCase().includes(search.toLowerCase())
   );
 

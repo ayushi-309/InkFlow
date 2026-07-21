@@ -101,21 +101,6 @@ const RecentPostsTable = ({ posts, onEdit, onDelete }) => (
         </tbody>
       </table>
     </div>
-
-    {/* Table footer */}
-    <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/50">
-      <p className="text-slate-400 text-[13px] font-medium">
-        Showing {posts.length} of 1,284 posts
-      </p>
-      <div className="flex items-center gap-1.5">
-        <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:border-slate-400 hover:text-slate-700 transition-all duration-150 text-sm font-bold">
-          ‹
-        </button>
-        <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:border-slate-400 hover:text-slate-700 transition-all duration-150 text-sm font-bold">
-          ›
-        </button>
-      </div>
-    </div>
   </div>
 );
 
