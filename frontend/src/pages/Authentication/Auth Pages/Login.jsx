@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../../features/user/user.slice";
 import { useAuth } from "../../../hooks/CustomLoginHook.jsx";
 import {
   RiMailLine,
@@ -13,6 +15,7 @@ import {
 const Login = () => {
   const navigate = useNavigate();
   const { toggleLoginUser } = useAuth();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,11 +35,18 @@ const Login = () => {
 
     setIsSubmitting(true);
 
-    // Simulate a short async delay (replace with real API call)
-    await new Promise((res) => setTimeout(res, 800));
-
-    toggleLoginUser();
-    navigate("/dashboard");
+    dispatch(loginUser({ email, password }))
+      .unwrap()
+      .then((data) => {
+        toggleLoginUser();
+        navigate("/");
+      })
+      .catch((err) => {
+        setError(err?.message || "Login failed");
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (

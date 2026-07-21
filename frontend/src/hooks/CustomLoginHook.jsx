@@ -1,32 +1,29 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getUser } from "../features/user/user.slice";
 
 const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [isUserLogin, setIsUserLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
 
-  // Fetching user form Backend
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products/1',{
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then(json => {
-        if (json.id === 1)
-          setIsUserLogin(true)
-        else
-          setIsUserLogin(false)
+    dispatch(getUser())
+      .unwrap()
+      .then((data) => {
+        console.log(data);
+        if (data) {
+          setIsUserLogin(true);
+        }
       })
       .catch((err) => {
-        console.log(err);
+        setIsUserLogin(false);
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, [])
+  }, [dispatch]);
 
   // Getting if user is logged in or not
   const getIsUserLogin = () => {

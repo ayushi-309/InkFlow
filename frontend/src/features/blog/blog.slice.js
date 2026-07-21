@@ -10,12 +10,12 @@ const initialState = {
 // Fetch All Blogs
 export const getAllBlog = createAsyncThunk(
   "getAllBlog",
-  async (_, rejectWithValue) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await axios.get("/api/blog/get-all-posts");
       return res.data;
     } catch (error) {
-      rejectWithValue(error);
+      return rejectWithValue(error);
     }
   },
 );
@@ -23,12 +23,12 @@ export const getAllBlog = createAsyncThunk(
 // Fetch Single Blog
 export const getSingleBlog = createAsyncThunk(
   "getSingleBlog",
-  async (slug, rejectWithValue) => {
+  async (slug, { rejectWithValue }) => {
     try {
       const res = await axios.get(`/api/blog/posts/${slug}`);
       return res.data;
     } catch (error) {
-      rejectWithValue(error);
+      return rejectWithValue(error);
     }
   },
 );

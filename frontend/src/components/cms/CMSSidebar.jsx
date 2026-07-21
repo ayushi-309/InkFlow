@@ -1,4 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../../features/user/user.slice";
 import { useAuth } from "../../hooks/CustomLoginHook.jsx";
 import {
   RiDashboardLine,
@@ -11,25 +13,48 @@ import {
 } from "@remixicon/react";
 
 const NAV_LINKS = [
-  { label: "Dashboard",  to: "/dashboard",  icon: RiDashboardLine },
-  { label: "Posts",      to: "/posts",       icon: RiArticleLine   },
-  { label: "Categories", to: "/categories",  icon: RiPriceTag3Line },
-  { label: "User",       to: "/user",        icon: RiUser3Line     },
+  {
+    label: "Dashboard",
+    to: "/dashboard",
+    icon: RiDashboardLine
+  },
+  {
+    label: "Posts",
+    to: "/posts",
+    icon: RiArticleLine
+  },
+  {
+    label: "Categories", 
+    to: "/categories",
+    icon: RiPriceTag3Line
+  },
+  { 
+    label: "User", 
+    to: "/user", 
+    icon: RiUser3Line 
+  },
 ];
 
-/**
- * Props:
- *  isOpen   — boolean (mobile drawer state)
- *  onClose  — () => void (close the drawer)
- */
+
 const CMSSidebar = ({ isOpen, onClose }) => {
   const { pathname } = useLocation();
-  const navigate     = useNavigate();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user?.data?.data);
   const { toggleLoginUser } = useAuth();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    toggleLoginUser();
-    navigate("/login");
+    dispatch(logoutUser())
+      .unwrap()
+      .then(() => {
+        toggleLoginUser();
+        navigate("/login");
+        // reload page 
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.error("Logout failed:", err);
+      });
   };
 
   const handleNavClick = () => {
@@ -78,7 +103,10 @@ const CMSSidebar = ({ isOpen, onClose }) => {
                   : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
               }`}
             >
-              <Icon size={17} className={active ? "text-white" : "text-slate-500"} />
+              <Icon
+                size={17}
+                className={active ? "text-white" : "text-slate-500"}
+              />
               {label}
             </Link>
           );
@@ -97,23 +125,37 @@ const CMSSidebar = ({ isOpen, onClose }) => {
       </div>
 
       {/* User footer */}
-      <div className="px-4 py-4 border-t border-slate-800 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white text-xs font-bold select-none flex-shrink-0">
-          AU
+      {user && (
+        <div className="px-4 py-4 border-t border-slate-800 flex items-center gap-3">
+          {user.avatar ? (
+            <img
+              src={user.avatar}
+              alt={user.fullname}
+              className="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-slate-700"
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white text-xs font-bold select-none flex-shrink-0">
+              {user.fullname?.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <p className="text-slate-200 text-[13px] font-semibold leading-none truncate">
+              {user.fullname}
+            </p>
+            <p className="text-slate-500 text-[11px] font-medium mt-0.5 truncate">
+              Logged in
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="text-slate-500 hover:text-red-400 transition-colors"
+            aria-label="Log out"
+            title="Log out"
+          >
+            <RiLogoutBoxRLine size={17} />
+          </button>
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-slate-200 text-[13px] font-semibold leading-none truncate">Admin User</p>
-          <p className="text-slate-500 text-[11px] font-medium mt-0.5 truncate">Editor-in-Chief</p>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="text-slate-500 hover:text-red-400 transition-colors"
-          aria-label="Log out"
-          title="Log out"
-        >
-          <RiLogoutBoxRLine size={17} />
-        </button>
-      </div>
+      )}
     </aside>
   );
 
@@ -129,7 +171,9 @@ const CMSSidebar = ({ isOpen, onClose }) => {
       <div
         onClick={onClose}
         className={`lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          isOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
       />
       {/* Drawer */}
