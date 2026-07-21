@@ -9,7 +9,6 @@ import ArticleBody from "./blog/ArticleBody";
 import ArticleTags from "./blog/ArticleTags";
 import AuthorBio from "./blog/AuthorBio";
 import BlogSidebar from "./blog/BlogSidebar";
-import NewsletterCTA from "./blog/NewsletterCTA";
 import RelatedStories from "./blog/RelatedStories";
 import ShareBar from "./blog/ShareBar";
 import CMSSidebar from "./cms/CMSSidebar.jsx";
@@ -36,7 +35,6 @@ export {
   ArticleTags,
   AuthorBio,
   BlogSidebar,
-  NewsletterCTA,
   RelatedStories,
   ShareBar,
   CMSSidebar,

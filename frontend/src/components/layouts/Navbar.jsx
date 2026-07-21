@@ -18,11 +18,6 @@ const Navbar = () => {
     }
   }, [searchQuery]);
 
-  const navLinks = [
-    { name: "Technology", href: "#" },
-    { name: "Lifestyle", href: "#" },
-    { name: "Business", href: "#" },
-  ];
 
   return (
     <nav className="w-full bg-white border-b border-slate-200 sticky top-0 z-50 transition-all duration-300">
@@ -38,19 +33,6 @@ const Navbar = () => {
               InkFlow
             </Link>
 
-            {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-center gap-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="text-slate-600 hover:text-slate-900 text-[15px] font-medium transition-colors duration-200 relative group"
-                >
-                  {link.name}
-                  <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-slate-900 transition-all duration-300 group-hover:w-full"></span>
-                </Link>
-              ))}
-            </div>
           </div>
 
           {/* Right: Search Bar & CMS Login (Desktop) */}
@@ -105,19 +87,6 @@ const Navbar = () => {
         }`}
       >
         <div className="px-4 pt-2 pb-6 space-y-4">
-          {/* Navigation Links */}
-          <div className="flex flex-col space-y-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.href}
-                className="text-slate-600 hover:text-slate-900 text-[15px] font-medium py-2 transition-colors duration-200 border-b border-slate-100"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
 
           {/* Search bar inside Mobile Menu */}
           <form onSubmit={handleSearchSubmit} className="relative w-full">

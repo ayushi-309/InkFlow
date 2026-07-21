@@ -1,6 +1,6 @@
 import { RiUser3Line } from "@remixicon/react";
 
-const AuthorBio = ({ author, authorRole, authorBio }) => {
+const AuthorBio = ({ author, authorRole, authorBio, authorAvatar }) => {
   const initials = author
     .split(" ")
     .map((n) => n[0])
@@ -10,9 +10,13 @@ const AuthorBio = ({ author, authorRole, authorBio }) => {
   return (
     <div className="mt-12 rounded-2xl border border-slate-100 bg-slate-50/60 p-6 md:p-8 flex flex-col sm:flex-row gap-5 items-start">
       {/* Avatar */}
-      <div className="w-14 h-14 rounded-full bg-slate-900 flex items-center justify-center text-white text-lg font-bold select-none flex-shrink-0">
-        {initials}
-      </div>
+      {authorAvatar ? (
+        <img src={authorAvatar} alt={author} className="w-14 h-14 rounded-full object-cover flex-shrink-0" />
+      ) : (
+        <div className="w-14 h-14 rounded-full bg-slate-900 flex items-center justify-center text-white text-lg font-bold select-none flex-shrink-0">
+          {initials}
+        </div>
+      )}
 
       <div className="flex-1">
         {/* Name + Follow */}
@@ -25,9 +29,6 @@ const AuthorBio = ({ author, authorRole, authorBio }) => {
               {authorRole}
             </p>
           </div>
-          <button className="text-xs font-semibold text-indigo-600 border border-indigo-200 px-4 py-1.5 rounded-full hover:bg-indigo-50 transition-colors duration-200 flex items-center gap-1.5">
-            <RiUser3Line size={13} /> Follow
-          </button>
         </div>
 
         {/* Bio */}

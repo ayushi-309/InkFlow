@@ -4,12 +4,6 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
-  const exploreLinks = [
-    { name: "Technology", href: "#" },
-    { name: "Lifestyle", href: "#" },
-    { name: "Business", href: "#" },
-    { name: "Archives", href: "#" },
-  ];
 
   const brandLinks = [
     { name: "About", href: "#" },
@@ -48,27 +42,8 @@ const Footer = () => {
           </div>
 
           {/* Right Columns: Navigation Links */}
-          <div className="md:col-span-6 grid grid-cols-2 gap-8 md:justify-items-end">
+          <div className="md:col-span-6 grid grid-cols-1 gap-8 md:justify-items-end">
             
-            {/* Column 1: Explore */}
-            <div className="space-y-4 md:w-32">
-              <h4 className="text-slate-900 text-[13px] font-bold uppercase tracking-wider">
-                Explore
-              </h4>
-              <ul className="space-y-2.5">
-                {exploreLinks.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      to={link.href}
-                      className="text-slate-600 hover:text-slate-900 text-[14px] font-medium transition-colors duration-200"
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             {/* Column 2: InkFlow */}
             <div className="space-y-4 md:w-32">
               <h4 className="text-slate-900 text-[13px] font-bold uppercase tracking-wider">

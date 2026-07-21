@@ -7,7 +7,7 @@ import {
 } from "@remixicon/react";
 import ShareBar from "./ShareBar";
 
-const ArticleMeta = ({ author, authorRole, date, readTime }) => {
+const ArticleMeta = ({ author, authorRole, date, readTime, authorAvatar }) => {
   const [bookmarked, setBookmarked] = useState(false);
 
   const initials = author
@@ -20,9 +20,17 @@ const ArticleMeta = ({ author, authorRole, date, readTime }) => {
     <div className="flex flex-wrap items-center gap-5 pb-7 border-b border-slate-100 mb-8">
       {/* Author */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-white text-sm font-bold select-none flex-shrink-0">
-          {initials}
-        </div>
+        {authorAvatar ? (
+          <img
+            src={authorAvatar}
+            alt={author}
+            className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-white text-sm font-bold select-none flex-shrink-0">
+            {initials}
+          </div>
+        )}
         <div>
           <p className="text-slate-800 text-sm font-semibold leading-none mb-0.5">
             {author}
